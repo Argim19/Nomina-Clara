@@ -56,7 +56,13 @@ La API admite estas variables de entorno:
 | `NOMINA_TOKEN_SECRET` | Firma de sesiones; debe definirse en producción |
 | `NOMINA_DB_PATH` | Ruta de la base SQLite |
 | `NOMINA_ALLOWED_ORIGIN` | Origen permitido para el frontend |
-| `NOMINA_SEED_DEMO` | Carga inicial de empleados demostrativos |
+| `NOMINA_SEED_DEMO` | Carga inicial de empleados (incluyendo equipo) |
+| `RESEND_API_KEY` | Clave API de Resend para envíos transaccionales |
+| `RESEND_FROM` | Remitente en Resend (por defecto `Nómina Clara <onboarding@resend.dev>`) |
+| `NOMINA_SMTP_USER` | Correo remitente para envío SMTP (ej. cuenta de Gmail) |
+| `NOMINA_SMTP_PASSWORD` | Contraseña de aplicación para SMTP |
+| `NOMINA_SMTP_HOST` | Servidor SMTP (por defecto `smtp.gmail.com`) |
+| `NOMINA_SMTP_PORT` | Puerto SMTP (por defecto `587`) |
 
 Para un despliegue productivo se recomienda reemplazar el usuario único por gestión de cuentas, servir bajo HTTPS, conectar un proveedor SMTP y desplegar la API detrás de un servidor WSGI/ASGI.
 

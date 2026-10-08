@@ -18,8 +18,27 @@ export default function App() {
   useEffect(() => { load(); }, [load]);
   const createEmployee = async (payload) => { try { const result = await api.createEmployee(payload); setEmployees((old) => [result, ...old]); notify('Empleado registrado correctamente.'); return true; } catch (err) { notify(err.message, 'error'); return false; } };
   const updateEmployee = async (id, payload) => { try { const result = await api.updateEmployee(id, payload); setEmployees(old => old.map(e => e.id === id ? result : e)); notify('Información del empleado actualizada.'); return true; } catch (err) { notify(err.message, 'error'); return false; } };
-  const createPayroll = async (payload) => { try { const result = await api.createPayroll(payload); setPayrolls(old => [result, ...old]); setDashboard(old => ({ ...old, payroll_count: (old.payroll_count || 0) + 1, current_payroll: (old.current_payroll || 0) + result.net_pay })); notify('Liquidación guardada en el histórico.'); return result; } catch (err) { notify(err.message, 'error'); return null; } };
-  const prepareEmail = async (payroll) => { try { const result = await api.prepareEmail(payroll.id); notify(result.message); } catch (err) { notify(err.message, 'error'); } };
+  const createPayroll = async (payload) => {
+    try {
+      const result = await api.createPayroll(payload);
+      setPayrolls(old => [result, ...old]);
+      setDashboard(old => ({ ...old, payroll_count: (old.payroll_count || 0) + 1, current_payroll: (old.current_payroll || 0) + result.net_pay }));
+      const emailDetail = result.email_dispatch?.message ? ` (${result.email_dispatch.message})` : '';
+      notify(`Liquidación guardada en el histórico.${emailDetail}`);
+      return result;
+    } catch (err) {
+      notify(err.message, 'error');
+      return null;
+    }
+  };
+  const prepareEmail = async (payroll) => {
+    try {
+      const result = await api.prepareEmail(payroll.id);
+      notify(result.message || `Comprobante tramitado para ${payroll.employee_email}`);
+    } catch (err) {
+      notify(err.message, 'error');
+    }
+  };
   const logout = () => { localStorage.removeItem('nomina_token'); setUser(null); };
   if (!user) return <><Login onLogin={setUser} /><Toast toast={toast} onClose={() => setToast(null)} /></>;
   const pages = {
